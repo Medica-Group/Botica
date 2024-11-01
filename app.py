@@ -1,27 +1,32 @@
 from flask import Flask, jsonify
-from flask_cors import CORS
 
 app = Flask(__name__)
-CORS(app)
 
 @app.route('/')
-def hello():
-    return 'Hello, Looker!'
+def home():
+    return "Looker Connector is Running"
 
-@app.route('/analyze', methods=['GET'])
+@app.route('/manifest')
 def manifest():
     return jsonify({
-        "name": "Simple Connector",
+        "name": "Simple Data Connector",
         "version": "1",
         "authType": "NONE",
-        "schema": {
-            "fields": [
-                {
-                    "name": "value",
-                    "dataType": "NUMBER"
+        "schema": [
+            {
+                "name": "value",
+                "dataType": "NUMBER",
+                "semantics": {
+                    "conceptType": "METRIC"
                 }
-            ]
-        }
+            }
+        ]
+    })
+
+@app.route('/data')
+def data():
+    return jsonify({
+        "values": [100, 200, 300]
     })
 
 if __name__ == '__main__':
