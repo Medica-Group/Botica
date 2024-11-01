@@ -9,49 +9,40 @@ def hello():
 @app.route('/analyze')
 def get_manifest():
     manifest = {
-        "name": "Data Analysis API",
-        "organizationId": "your-org",
-        "apiVersion": "v1",
-        "components": [
-            {
-                "name": "analyze",
-                "label": "Data Analysis",
-                "description": "Analyze data using Python",
-                "authentication": {
-                    "type": "NONE"
-                },
-                "endpoints": [
-                    {
-                        "name": "getData",
-                        "label": "Get Data",
-                        "description": "Get analyzed data",
-                        "httpMethod": "POST",
-                        "uri": "/analyze",
-                        "response": {
-                            "supportedTypes": ["JSON"]
+        "name": "Data Analysis Connector",
+        "version": "1.0",
+        "serviceType": "REST",
+        "authType": "NONE",
+        "endpoints": [{
+            "name": "getData",
+            "httpMethod": "POST",
+            "url": "/data"
+        }],
+        "schema": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "dimension1": {"type": "string"},
+                            "metric1": {"type": "number"}
                         }
                     }
-                ],
-                "schema": {
-                    "fields": [
-                        {
-                            "name": "value",
-                            "label": "Value",
-                            "dataType": "NUMBER"
-                        }
-                    ]
                 }
             }
-        ]
+        }
     }
     return jsonify(manifest)
 
-@app.route('/analyze', methods=['POST'])
-def analyze():
-    # Simple response for testing
+@app.route('/data', methods=['POST'])
+def get_data():
     return jsonify({
-        "status": "success",
-        "data": [{"value": 123}]
+        "data": [
+            {"dimension1": "A", "metric1": 100},
+            {"dimension1": "B", "metric1": 200}
+        ]
     })
 
 if __name__ == '__main__':
